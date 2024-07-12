@@ -1,339 +1,208 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elegant Photo Gallery</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <title>フォトギャラリー</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
-        
-        body, html {
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background: #fff;
+            background-color: #f0f0f0;
             color: #333;
-            overflow-x: hidden;
         }
-
-        .background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: linear-gradient(45deg, #f3f3f3, #e6e6e6);
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
-
-        .background span {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.8);
-            animation: float 10s infinite;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .background span:nth-child(1) {
-            width: 80px;
-            height: 80px;
-            left: 10%;
-            animation-duration: 12s;
-        }
-
-        .background span:nth-child(2) {
-            width: 60px;
-            height: 60px;
-            right: 15%;
-            animation-duration: 18s;
-            animation-delay: 3s;
-        }
-
-        .background span:nth-child(3) {
-            width: 100px;
-            height: 100px;
-            bottom: 20%;
-            left: 20%;
-            animation-duration: 15s;
-            animation-delay: 6s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-
         header {
-            padding: 2rem;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin: 0;
-            letter-spacing: 0.5rem;
-            text-transform: uppercase;
-            color: #333;
-        }
-
-        .menu {
             display: flex;
-            justify-content: center;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.9);
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
         }
-
-        .menu button {
-            background: none;
-            border: none;
-            color: #333;
-            font-size: 1rem;
-            margin: 0 1rem;
-            cursor: pointer;
-            transition: color 0.3s ease;
+        h1 {
+            margin: 0;
+        }
+        .dropdown {
             position: relative;
+            display: inline-block;
         }
-
-        .menu button::after {
-            content: '';
+        .dropbtn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+        .dropdown-content {
+            display: none;
             position: absolute;
-            width: 100%;
-            height: 2px;
-            bottom: -5px;
-            left: 0;
-            background-color: #00aaff;
-            visibility: hidden;
-            transform: scaleX(0);
-            transition: all 0.3s ease-in-out;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
         }
-
-        .menu button:hover::after {
-            visibility: visible;
-            transform: scaleX(1);
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
         }
-
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown:hover .dropbtn {
+            background-color: #3e8e41;
+        }
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            padding: 2rem;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-gap: 20px;
         }
-
-        .gallery-item {
-            position: relative;
-            overflow: hidden;
-            border-radius: 10px;
+        .gallery img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
             cursor: pointer;
             transition: transform 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
-
-        .gallery-item:hover {
+        .gallery img:hover {
             transform: scale(1.05);
         }
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .gallery-item:hover img {
-            transform: scale(1.1);
-        }
-
-        .gallery-item-title {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.9);
-            color: #333;
-            font-size: 1rem;
-            text-align: center;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
-        }
-
-        .gallery-item:hover .gallery-item-title {
-            transform: translateY(0);
-        }
-
         .modal {
             display: none;
             position: fixed;
-            z-index: 2000;
+            z-index: 2;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-color: rgba(0,0,0,0.9);
         }
-
         .modal-content {
-            max-width: 90%;
-            max-height: 90%;
+            margin: auto;
+            display: block;
+            width: 80%;
+            max-width: 700px;
+            max-height: 80%;
             object-fit: contain;
-            border-radius: 5px;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
-
-        #content {
-            background: rgba(255, 255, 255, 0.9);
-            margin: 2rem auto;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            display: none;
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
         }
-
-        .sub-menu {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .sub-menu button {
-            background: rgba(0, 170, 255, 0.1);
-            border: none;
-            color: #333;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
             cursor: pointer;
-            transition: background 0.3s ease;
         }
-
-        .sub-menu button:hover {
-            background: rgba(0, 170, 255, 0.2);
+        #content {
+            background-color: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        @keyframes backgroundAnimation {
+            0% {background-position: 0% 50%;}
+            50% {background-position: 100% 50%;}
+            100% {background-position: 0% 50%;}
+        }
+        body {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: backgroundAnimation 15s ease infinite;
         }
     </style>
 </head>
 <body>
-    <div class="background">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-    <header>
-        <h1>Elegant Photo Gallery</h1>
-    </header>
-    <div class="menu">
-        <button onclick="toggleContent('profile')">Profile</button>
-        <button onclick="toggleSubMenu('works')">Works</button>
-        <button onclick="toggleSubMenu('diary')">Diary</button>
-    </div>
-    <div id="content"></div>
-    <main class="gallery" id="gallery"></main>
-    <div id="myModal" class="modal" onclick="closeModal()">
-        <img class="modal-content" id="modalImage" onclick="event.stopPropagation()">
+    <div class="container">
+        <header>
+            <h1>フォトギャラリー</h1>
+            <div class="dropdown">
+                <button class="dropbtn">メニュー</button>
+                <div class="dropdown-content">
+                    <a href="#" onclick="loadContent('profile')">経歴</a>
+                    <a href="#" onclick="loadContent('works')">作品紹介</a>
+                    <a href="#" onclick="loadContent('diary')">日記</a>
+                </div>
+            </div>
+        </header>
+
+        <div class="gallery">
+            <img src="/api/placeholder/250/200" alt="写真1" onclick="openModal(this.src)">
+            <img src="/api/placeholder/250/200" alt="写真2" onclick="openModal(this.src)">
+            <img src="/api/placeholder/250/200" alt="写真3" onclick="openModal(this.src)">
+            <img src="/api/placeholder/250/200" alt="写真4" onclick="openModal(this.src)">
+            <img src="/api/placeholder/250/200" alt="写真5" onclick="openModal(this.src)">
+            <img src="/api/placeholder/250/200" alt="写真6" onclick="openModal(this.src)">
+        </div>
+
+        <div id="myModal" class="modal" onclick="closeModal()">
+            <span class="close">&times;</span>
+            <img class="modal-content" id="modalImg">
+        </div>
+
+        <div id="content"></div>
     </div>
 
     <script>
-        // Image and title array
-        const images = [
-            { src: "/api/placeholder/800/600", title: "Tranquil Lake at Sunset" },
-            { src: "/api/placeholder/800/600", title: "Vibrant City Lights" },
-            { src: "/api/placeholder/800/600", title: "Serene Mountain Landscape" },
-            { src: "/api/placeholder/800/600", title: "Colorful Autumn Forest" },
-            { src: "/api/placeholder/800/600", title: "Misty Morning in the Countryside" },
-            { src: "/api/placeholder/800/600", title: "Dramatic Coastal Cliffs" }
-        ];
-
-        // Generate gallery
-        const gallery = document.getElementById('gallery');
-        images.forEach(image => {
-            const item = document.createElement('div');
-            item.className = 'gallery-item';
-            item.innerHTML = `
-                <img src="${image.src}" alt="${image.title}" onclick="openModal(this)">
-                <div class="gallery-item-title">${image.title}</div>
-            `;
-            gallery.appendChild(item);
-        });
-
-        function toggleContent(type) {
-            const contentDiv = document.getElementById('content');
-            if (contentDiv.style.display === 'block' && contentDiv.dataset.type === type) {
-                contentDiv.style.display = 'none';
-                return;
-            }
-            
-            let content = '';
-            switch(type) {
-                case 'profile':
-                    content = 'I am a passionate photographer with a keen eye for capturing the beauty of both natural landscapes and urban environments. Since embarking on my professional journey in 2010, I have had the privilege of showcasing my work in numerous exhibitions across the globe. My photography aims to highlight the delicate balance between humanity and nature, while also preserving the fleeting moments of beauty in our rapidly changing world.';
-                    break;
-            }
-            contentDiv.innerHTML = `<h2>${type.charAt(0).toUpperCase() + type.slice(1)}</h2><p>${content}</p>`;
-            contentDiv.style.display = 'block';
-            contentDiv.dataset.type = type;
-        }
-
-        function toggleSubMenu(type) {
-            const contentDiv = document.getElementById('content');
-            if (contentDiv.style.display === 'block' && contentDiv.dataset.type === type) {
-                contentDiv.style.display = 'none';
-                return;
-            }
-            
-            let items;
-            switch(type) {
-                case 'works':
-                    items = ['Seasonal Splendor', 'Urban Symphony', 'Whispers of Nature'];
-                    break;
-                case 'diary':
-                    items = ['2024-07-13', '2024-07-14', '2024-07-15'];
-                    break;
-            }
-            let subMenu = `<h2>${type.charAt(0).toUpperCase() + type.slice(1)}</h2><div class="sub-menu">`;
-            items.forEach(item => {
-                subMenu += `<button onclick="loadSubContent('${type}', '${item}')">${item}</button>`;
-            });
-            subMenu += '</div>';
-            contentDiv.innerHTML = subMenu;
-            contentDiv.style.display = 'block';
-            contentDiv.dataset.type = type;
-        }
-
-        function loadSubContent(type, item) {
-            let content = '';
-            if (type === 'works' && item === 'Seasonal Splendor') {
-                content = '"Seasonal Splendor" is a captivating photo series that celebrates the ever-changing beauty of nature throughout the year. This collection features 12 meticulously crafted photographs, each representing a unique aspect of the four seasons. From the delicate cherry blossoms of spring to the lush greenery of summer, the fiery foliage of autumn, and the serene snowscapes of winter, this series aims to evoke a deep appreciation for the cyclical wonders of our natural world.';
-            } else if (type === 'diary' && item === '2024-07-13') {
-                content = 'Today\'s early morning excursion to the coast was nothing short of magical. As I set up my equipment in the pre-dawn stillness, I was filled with anticipation for the moment when the sun would peek over the horizon. The interplay of light and shadow as daybreak unfolded was truly mesmerizing. The gentle lapping of waves provided a soothing soundtrack to my shoot, reminding me of the constant ebb and flow of nature. I\'m particularly excited about a series of shots capturing the sun\'s reflection on the water, creating a golden pathway that seems to invite the viewer into the scene. These images have potential to be the cornerstone of a new series exploring the theme of new beginnings and natural rhythms.';
-            }
-            document.getElementById('content').innerHTML += `<h3>${item}</h3><p>${content}</p>`;
-        }
-
-        function openModal(img) {
-            const modal = document.getElementById('myModal');
-            const modalImg = document.getElementById('modalImage');
-            modal.style.display = 'flex';
-            modalImg.src = img.src;
-            modalImg.alt = img.alt;
+        function openModal(src) {
+            var modal = document.getElementById("myModal");
+            var modalImg = document.getElementById("modalImg");
+            modal.style.display = "block";
+            modalImg.src = src;
         }
 
         function closeModal() {
-            document.getElementById('myModal').style.display = 'none';
+            var modal = document.getElementById("myModal");
+            modal.style.display = "none";
         }
 
-        // Close content when clicking outside
-        document.addEventListener('click', function(event) {
+        async function loadContent(type) {
             const contentDiv = document.getElementById('content');
-            const menuButtons = document.querySelectorAll('.menu button');
-            if (!contentDiv.contains(event.target) && !Array.from(menuButtons).some(button => button.contains(event.target))) {
-                contentDiv.style.display = 'none';
+            let filename;
+            switch(type) {
+                case 'profile':
+                    filename = 'profile.txt';
+                    break;
+                case 'works':
+                    filename = 'works.txt';
+                    break;
+                case 'diary':
+                    filename = 'diary.txt';
+                    break;
+            }
+            try {
+                const response = await fetch(filename);
+                const text = await response.text();
+                contentDiv.innerHTML = `<h2>${type.charAt(0).toUpperCase() + type.slice(1)}</h2><p>${text}</p>`;
+                contentDiv.style.display = 'block';
+            } catch (error) {
+                console.error('Error loading content:', error);
+                contentDiv.innerHTML = '<p>コンテンツの読み込みに失敗しました。</p>';
+            }
+        }
+
+        document.addEventListener('click', function(event) {
+            var content = document.getElementById('content');
+            var dropdown = document.querySelector('.dropdown');
+            if (!content.contains(event.target) && !dropdown.contains(event.target)) {
+                content.style.display = 'none';
             }
         });
     </script>
