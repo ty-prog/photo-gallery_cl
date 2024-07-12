@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elegant Photo Gallery</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+            color: #333;
+        }
+        header {
+            padding: 2rem;
+            text-align: center;
+            background: #f8f8f8;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            color: #333;
+        }
+        .menu {
+            display: flex;
+            justify-content: center;
+            padding: 1rem;
+            background: #f0f0f0;
+        }
+        .menu button {
+            background: none;
+            border: none;
+            color: #333;
+            font-size: 1rem;
+            margin: 0 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .menu button:hover {
+            color: #666;
+        }
+        .gallery {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+        .gallery-item {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .gallery-item-title {
+            padding: 1rem;
+            background: #f8f8f8;
+            text-align: center;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        #content {
+            background: #ffffff;
+            margin: 2rem auto;
+            padding: 2rem;
+            max-width: 800px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Elegant Photo Gallery</h1>
+    </header>
+    <div class="menu">
+        <button onclick="toggleContent('profile')">Profile</button>
+        <button onclick="toggleContent('works')">Works</button>
+        <button onclick="toggleContent('diary')">Diary</button>
+    </div>
+    <div id="content"></div>
+    <main class="gallery" id="gallery"></main>
+    <div id="myModal" class="modal" onclick="closeModal()">
+        <img class="modal-content" id="modalImage" onclick="event.stopPropagation()">
+    </div>
+
+    <script>
+        const images = [
+            { src: "https://via.placeholder.com/800x600.png?text=Mountain+Lake", title: "Mountain Lake" },
+            { src: "https://via.placeholder.com/800x600.png?text=City+Lights", title: "City Lights" },
+            { src: "https://via.placeholder.com/800x600.png?text=Wheat+Fields", title: "Wheat Fields" },
+            { src: "https://via.placeholder.com/800x600.png?text=Coastal+Cliffs", title: "Coastal Cliffs" },
+            { src: "https://via.placeholder.com/800x600.png?text=Autumn+Forest", title: "Autumn Forest" },
+            { src: "https://via.placeholder.com/800x600.png?text=Desert+Oasis", title: "Desert Oasis" }
+        ];
+
+        const gallery = document.getElementById("gallery");
+        images.forEach(image => {
+            const item = document.createElement("div");
+            item.className = "gallery-item";
+            item.innerHTML = `
+                <img src="${image.src}" alt="${image.title}" onclick="openModal(this)">
+                <div class="gallery-item-title">${image.title}</div>
+            `;
+            gallery.appendChild(item);
+        });
+
+        function toggleContent(type) {
+            const contentDiv = document.getElementById("content");
+            let content = "";
+            if (type === "profile") {
+                content = "I am a photographer specializing in landscape and urban photography.";
+            } else if (type === "works") {
+                content = "My works include 'Chromatic Seasons', 'Metropolitan Rhythms', and 'Whispers of Wilderness'.";
+            } else if (type === "diary") {
+                content = "Latest entry: A beautiful sunrise shoot at the beach.";
+            }
+            contentDiv.innerHTML = `<h2>${type.charAt(0).toUpperCase() + type.slice(1)}</h2><p>${content}</p>`;
+            contentDiv.style.display = contentDiv.style.display === "none" ? "block" : "none";
+        }
+
+        function openModal(img) {
+            const modal = document.getElementById("myModal");
+            const modalImg = document.getElementById("modalImage");
+            modal.style.display = "flex";
+            modalImg.src = img.src;
+            modalImg.alt = img.alt;
+        }
+
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none";
+        }
+    </script>
+</body>
+</html>
